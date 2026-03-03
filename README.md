@@ -24,14 +24,14 @@ npm link
 ### 2. Standard Usage (Node.js API Only)
 If you are only building a backend Express API:
 ```bash
-nexus-bundle build -i src/server.js -o gitnexus-bundle.cjs
+npx --yes nexus-bundler@latest build -i src/server.js -o gitnexus-bundle.cjs
 ```
 
 ### 3. Full-Stack Enterprise Usage (Next.js, Vite, React + Node.js)
-If you are building a unified full-stack app (e.g., a Next.js static frontend served by a custom Node.js backend), use the Universal SFX (Self-Extracting) command:
+If you are building a unified full-stack app (e.g., a Next.js static frontend served by a custom Node.js backend), use the Universal SFX (Self-Extracting) command anywhere in your terminal (no `package.json` modifications required!):
 
 ```bash
-nexus-bundle build -i server.js -f "npm run build" -s out
+npx --yes nexus-bundler@latest build -i server.js -f "npm run build" -s out
 ```
 
 #### What this does:
