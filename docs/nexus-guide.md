@@ -169,3 +169,22 @@ my-node-api/
 1. Build command:
    \`nexus-bundle build -i src/index.js\`
    *(This generates the `.github` folder, the `.json` manifest, and the `.cjs` executable.)*
+
+---
+
+## 📘 8. Native TypeScript Support (Zero-Config)
+
+Whether you write in **JavaScript** or **TypeScript**, `nexus-bundle` compiles your code flawlessly without requiring you to compile it yourself first.
+
+Because the underlying engine is powered by `esbuild`, the bundler natively processes `.ts` and `.tsx` files directly.
+
+\`\`\`bash
+nexus-bundle build -i src/server.ts
+\`\`\`
+
+**What happens underneath:**
+1. Types are instantly stripped out (no type checking is performed during bundling, maximizing speed).
+2. The modern TypeScript is transpiled down to browser-safe CommonJS.
+3. No `tsconfig.json` is strictly required for the build to succeed.
+
+This completely eliminates configuration conflicts and allows developers to write extremely robust code that bundles to $0-overhead GitNexus executables in less than 50 milliseconds.

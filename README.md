@@ -4,6 +4,9 @@ The overarching Command Line Interface (CLI) to compile **any Node.js full-stack
 
 GitNexus Universal Bundler enables you to take massive, multi-framework applications (like Next.js + Express) and compress them into a solitary `.cjs` executable payload that boots instantaneously inside the **GitNexus Browser WebContainer OS**.
 
+> 📚 **[Read the Complete GitNexus Cloud Architecture Guide Here](docs/nexus-guide.md)**
+> Learn the exact limitations of WebContainers, how to bypass Native C++ barriers, and view professional Enterprise directory structures.
+
 ## 🚀 Installation & Usage
 
 ### 1. Global Installation
@@ -93,3 +96,18 @@ app.use(helmet({
     frameguard: false // CRITICAL: Allows GitNexus iframe display
 }));
 ```
+
+### 7. Native TypeScript Support (Zero-Config)
+The Universal Bundler is powered by `esbuild` under the hood. It natively understands and compiles both JavaScript (`.js`, `.cjs`, `.mjs`) and TypeScript (`.ts`, `.tsx`) completely out of the box.
+
+There is **zero configuration required**. You do not need a `tsconfig.json` or the `tsc` compiler.
+
+```bash
+# Point the bundler directly at a TypeScript file:
+nexus-bundle build -i src/server.ts
+```
+
+The bundler will automatically:
+1. Strip all TypeScript types instantly.
+2. Transpile the modern code into GitNexus-required CommonJS.
+3. Package it into the final `gitnexus-bundle.cjs` executable.
