@@ -9,7 +9,7 @@ import { runBundler } from '../lib/bundler.js';
 import { generateGitNexusManifest } from '../lib/generators.js';
 
 program
-    .name('nexus-bundle')
+    .name('gitnexus-bundle')
     .description('Universal CLI to compile any Node.js/Express repository into a GitNexus Cloud Bundle')
     .version('1.0.0');
 

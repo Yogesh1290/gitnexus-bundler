@@ -10,10 +10,10 @@ This guide explains the "Why" and "How" of architecting the perfect GitNexus app
 
 When GitNexus boots your application in "Instant Load" mode, it analyzes `gitnexus.json` and downloads your `bundleUrl`.
 
-To achieve 1-second Instant Boot speeds, GitNexus **does not** clone your entire repository or run `npm install`. Instead, it downloads a solitary `.cjs` (CommonJS executable) and runs `node gitnexus-bundle.cjs`.
+To achieve 1-second Instant Boot speeds, GitNexus **does not** clone your entire repository or run `npm install`. Instead, it downloads a solitary `.cjs` (CommonJS executable) and runs `node gitgitnexus-bundle.cjs`.
 
 ### Why the Universal Bundler Exists
-The Universal Bundler (`nexus-bundle`) automatically orchestrates this process for you:
+The Universal Bundler (`gitnexus-bundle`) automatically orchestrates this process for you:
 1. It analyzes your `server.js` and physically embeds the Javascript of every single dependency (`npm i cors express`) into one giant file.
 2. **The VFS SFX System:** It Base64 encodes your entire compiled frontend (e.g., `out/index.html`) and prepends a Javascript script onto the `.cjs` executable. Milliseconds prior to your Express server booting, the `.cjs` script rapidly extracts the frontend HTML files onto the GitNexus Virtual Hard Drive, re-materializing your application.
 
@@ -21,7 +21,7 @@ The Universal Bundler (`nexus-bundle`) automatically orchestrates this process f
 
 ## ☁️ 2. Hosting Your Bundle
 
-After running the bundler locally, you get `gitnexus-bundle.cjs`. You must host this file somewhere public so GitNexus can download it via the `bundleUrl` in `gitnexus.json`.
+After running the bundler locally, you get `gitgitnexus-bundle.cjs`. You must host this file somewhere public so GitNexus can download it via the `bundleUrl` in `gitnexus.json`.
 
 ### ✅ Recommended — Cloudflare Pages (Free, Truly Unlimited)
 
@@ -163,15 +163,15 @@ my-fullstack-app/
 ├── next.config.ts                  # Must include "output: 'export'"
 ├── tsconfig.json
 ├── gitnexus.json                   # ✨ AUTO-GENERATED: Cloud Manifest
-└── gitnexus-bundle.cjs             # ✨ LOCAL BUILD OUTPUT (add to .gitignore)
+└── gitgitnexus-bundle.cjs             # ✨ LOCAL BUILD OUTPUT (add to .gitignore)
 ```
 
 **Build command:**
 ```bash
-nexus-bundle build -i server.js -f "npm run build" -s out
+gitnexus-bundle build -i server.js -f "npm run build" -s out
 ```
 
-**Then host `gitnexus-bundle.cjs` on Cloudflare Pages and update `bundleUrl` in `gitnexus.json`.**
+**Then host `gitgitnexus-bundle.cjs` on Cloudflare Pages and update `bundleUrl` in `gitnexus.json`.**
 
 ---
 
@@ -188,22 +188,22 @@ my-node-api/
 ├── package.json
 ├── tsconfig.json
 ├── gitnexus.json                   # ✨ AUTO-GENERATED: Cloud Manifest
-└── gitnexus-bundle.cjs             # ✨ LOCAL BUILD OUTPUT (add to .gitignore)
+└── gitgitnexus-bundle.cjs             # ✨ LOCAL BUILD OUTPUT (add to .gitignore)
 ```
 
 **Build command:**
 ```bash
-nexus-bundle build -i src/index.js
+gitnexus-bundle build -i src/index.js
 ```
 
 ---
 
 ## 📘 9. Native TypeScript Support (Zero-Config)
 
-Whether you write in **JavaScript** or **TypeScript**, `nexus-bundle` compiles your code flawlessly without requiring you to compile it yourself first.
+Whether you write in **JavaScript** or **TypeScript**, `gitnexus-bundle` compiles your code flawlessly without requiring you to compile it yourself first.
 
 ```bash
-nexus-bundle build -i src/server.ts
+gitnexus-bundle build -i src/server.ts
 ```
 
 **What happens underneath:**

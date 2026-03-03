@@ -1,13 +1,13 @@
-# GitNexus Universal Bundler (`nexus-bundle`)
+# GitNexus Universal Bundler (`gitnexus-bundle`)
 
-![NPM Version](https://img.shields.io/npm/v/nexus-bundler) ![License](https://img.shields.io/npm/l/nexus-bundler)
+![NPM Version](https://img.shields.io/npm/v/gitgitnexus-bundler) ![License](https://img.shields.io/npm/l/gitgitnexus-bundler)
 
 *Tags: `#gitnexus` `#webcontainer` `#serverless` `#nextjs` `#react` `#nodejs` `#bundler`*
 
 A **Command Line Interface (CLI) tool** that compiles any Node.js full-stack repository into a self-contained **GitNexus Cloud Executable** (`.cjs` bundle).
 
 This tool runs **locally on your machine** and produces two output files:
-- `gitnexus-bundle.cjs` — your self-contained app executable
+- `gitgitnexus-bundle.cjs` — your self-contained app executable
 - `gitnexus.json` — a manifest pointing to where you host your bundle
 
 > 📚 **[Read the Complete GitNexus Cloud Architecture Guide Here](docs/nexus-guide.md)**
@@ -18,19 +18,19 @@ This tool runs **locally on your machine** and produces two output files:
 
 ### Global Installation
 ```bash
-npm install -g nexus-bundler
+npm install -g gitgitnexus-bundler
 # OR if cloning from source:
 npm link
 ```
 
 ### Backend-only (Express API)
 ```bash
-npx --yes nexus-bundler@latest build -i src/server.js -o gitnexus-bundle.cjs
+npx --yes gitgitnexus-bundler@latest build -i src/server.js -o gitgitnexus-bundle.cjs
 ```
 
 ### Full-Stack (Next.js / React + Node.js)
 ```bash
-npx --yes nexus-bundler@latest build -i server.js -f "npm run build" -s out
+npx --yes gitgitnexus-bundler@latest build -i server.js -f "npm run build" -s out
 ```
 
 ---
@@ -40,7 +40,7 @@ npx --yes nexus-bundler@latest build -i server.js -f "npm run build" -s out
 | Option | Description | Required |
 |--------|-------------|----------|
 | `-i, --input <path>` | Entry point file | ✅ Yes |
-| `-o, --output <path>` | Output file name (default: `gitnexus-bundle.cjs`) | No |
+| `-o, --output <path>` | Output file name (default: `gitgitnexus-bundle.cjs`) | No |
 | `-f, --frontend <cmd>` | Frontend build command to run first | No |
 | `-s, --static <dir>` | Frontend static output directory to embed into the bundle | No |
 
@@ -48,7 +48,7 @@ npx --yes nexus-bundler@latest build -i server.js -f "npm run build" -s out
 
 ## ☁️ Hosting Your Bundle (Recommended)
 
-After bundling, you need to host `gitnexus-bundle.cjs` somewhere public so GitNexus can download it. Here are your options:
+After bundling, you need to host `gitgitnexus-bundle.cjs` somewhere public so GitNexus can download it. Here are your options:
 
 ### ✅ BEST — Cloudflare Pages (Free, Truly Unlimited)
 
@@ -90,7 +90,7 @@ You can also manually upload your `.cjs` to a GitHub Release and use the downloa
 
 ```
 github.com/YOUR_USERNAME/YOUR_REPO → Releases → Draft new release
-→ Upload gitnexus-bundle.cjs → Publish with a versioned tag (e.g. v1.0.0)
+→ Upload gitgitnexus-bundle.cjs → Publish with a versioned tag (e.g. v1.0.0)
 ```
 
 > Use `v1.0.0`, `v1.0.1` etc. — **never use `latest` as a tag name.**
@@ -153,5 +153,5 @@ app.use(helmet({
 Powered by `esbuild` — zero configuration needed.
 
 ```bash
-nexus-bundle build -i src/server.ts
+gitnexus-bundle build -i src/server.ts
 ```

@@ -1,14 +1,14 @@
 {
-  "name": "nexus-bundler",
+  "name": "gitnexus-bundler",
   "version": "1.0.0",
-  "description": "Universal GitNexus Cloud Bundler CLI",
+  "description": "Universal GitNexus Cloud Bundler CLI — compile any Node.js/Next.js app into a single .cjs executable for GitNexus WebContainer deployments",
   "main": "bin/index.js",
   "type": "module",
   "bin": {
-    "nexus-bundle": "./bin/index.js"
+    "gitnexus-bundle": "./bin/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"No tests yet\" && exit 0"
   },
   "keywords": [
     "gitnexus",
@@ -19,10 +19,30 @@
     "react",
     "serverless",
     "express",
-    "cli"
+    "cli",
+    "esbuild",
+    "deploy"
   ],
   "author": "GitNexus",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yogesh1290/gitnexus-bundler.git"
+  },
+  "homepage": "https://github.com/Yogesh1290/gitnexus-bundler#readme",
+  "bugs": {
+    "url": "https://github.com/Yogesh1290/gitnexus-bundler/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "chalk": "^5.6.2",
     "commander": "^14.0.3",
