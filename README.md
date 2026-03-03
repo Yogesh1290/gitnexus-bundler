@@ -1,117 +1,100 @@
-# GitNexus Universal Bundler (nexus-bundle)
+# GitNexus Universal Bundler (`nexus-bundle`)
 
 ![NPM Version](https://img.shields.io/npm/v/nexus-bundler) ![License](https://img.shields.io/npm/l/nexus-bundler)
 
 *Tags: `#gitnexus` `#webcontainer` `#serverless` `#nextjs` `#react` `#nodejs` `#bundler`*
 
-The overarching Command Line Interface (CLI) to compile **any Node.js full-stack repository** into a high-performance, autonomous **GitNexus Cloud Executable**.
+A **Command Line Interface (CLI) tool** that compiles any Node.js full-stack repository into a self-contained **GitNexus Cloud Executable** (`.cjs` bundle).
 
-GitNexus Universal Bundler enables you to take massive, multi-framework applications (like Next.js + Express) and compress them into a solitary `.cjs` executable payload that boots instantaneously inside the **GitNexus Browser WebContainer OS**.
+This tool runs **locally on your machine** and produces two output files:
+- `gitnexus-bundle.cjs` — your self-contained app executable
+- `gitnexus.json` — a manifest pointing to where you host your bundle
 
 > 📚 **[Read the Complete GitNexus Cloud Architecture Guide Here](docs/nexus-guide.md)**
-> Learn the exact limitations of WebContainers, how to bypass Native C++ barriers, and view professional Enterprise directory structures.
 
 ## 🚀 Installation & Usage
 
-### 1. Global Installation
-To use the bundler dynamically across your system, link or install it globally:
+### Global Installation
 ```bash
-npm install -g nexus-bundle
+npm install -g nexus-bundler
 # OR if cloning from source:
 npm link
 ```
 
-### 2. Standard Usage (Node.js API Only)
-If you are only building a backend Express API:
+### Backend-only (Express API)
 ```bash
 npx --yes nexus-bundler@latest build -i src/server.js -o gitnexus-bundle.cjs
 ```
 
-### 3. Full-Stack Enterprise Usage (Next.js, Vite, React + Node.js)
-If you are building a unified full-stack app (e.g., a Next.js static frontend served by a custom Node.js backend), use the Universal SFX (Self-Extracting) command anywhere in your terminal (no `package.json` modifications required!):
-
+### Full-Stack (Next.js / React + Node.js)
 ```bash
 npx --yes nexus-bundler@latest build -i server.js -f "npm run build" -s out
 ```
 
-#### What this does:
-1. `-f "npm run build"`: Automatically executes your frontend framework's build step.
-2. `nexus-bundle`: Compiles your Node.js `server.js` and strips out problematic ESM syntax, enforcing backward-compatible CommonJS.
-3. `-s out`: **Virtual File System (VFS) Injection**. The bundler takes your entire compiled frontend directory (e.g., Next.js `out/` or Vite `dist/`), Base64 encodes it, and embeds it directly into the `.cjs` executable script!
-4. Generates `gitnexus.json` so GitNexus Cloud knows exactly how to boot your app.
-5. Injects a hardened `.github/workflows/gitnexus-release.yml` GitHub Action to automate CI/CD deployments on push.
+## CLI Options
+
+| Option | Description | Required |
+|--------|-------------|----------|
+| `-i, --input <path>` | Entry point file | ✅ Yes |
+| `-o, --output <path>` | Output file name (default: `gitnexus-bundle.cjs`) | No |
+| `-f, --frontend <cmd>` | Frontend build command to run first | No |
+| `-s, --static <dir>` | Frontend static output directory to embed into the bundle | No |
+
+## How It Works
+
+1. **`-f "npm run build"`** — Runs your frontend framework's build step.
+2. **Bundle** — Compiles your Node.js entry point into a single CommonJS `.cjs` file using `esbuild`.
+3. **`-s out`** — (Optional) Base64-encodes your compiled frontend and embeds it directly into the `.cjs` executable.
+4. **Generates `gitnexus.json`** — A manifest so GitNexus Cloud knows how to boot your app.
+
+After bundling, **you choose** how to host and deploy your `gitnexus-bundle.cjs` — upload it to any public file host, a CDN, or your own server.
 
 ---
 
 ## 🏗️ Architectural Guidelines for GitNexus WebContainers
 
-GitNexus runs an entire Linux-like OS inside the browser using WebAssembly (WebContainers). This is incredibly powerful but comes with strict physical limitations compared to a standard VPS (AWS/Vercel).
-
-**Before using the Universal Bundler, strictly read these architectural rules.**
+GitNexus runs a Linux-like OS inside the browser using WebAssembly (WebContainers). This is incredibly powerful but comes with strict physical limitations.
 
 ### 1. The Native C++ Barrier (CRITICAL)
-Browsers **cannot execute Native C++ binaries**. Any Node.js module that relies on `node-gyp` or pre-compiled C++ addons will **fatally crash** the WebContainer.
-*   ❌ **DO NOT USE**: `bcrypt`, `node-sass`, `canvas`, `sharp`, `sqlite3`, `puppeteer`.
-*   ✅ **USE INSTEAD**: `bcryptjs` (pure JS), `sass` (pure JS), Cloudinary APIs, `pg` (pure JS Postgres driver).
-
-*Note: The Universal Bundler automatically attempts to `--external` these modules so they don't break the build compiler, but if your code dynamically "requires" them at runtime, your server will freeze in the browser.*
+Browsers **cannot execute Native C++ binaries**. Any Node.js module relying on `node-gyp` will crash.
+- ❌ **DO NOT USE**: `bcrypt`, `node-sass`, `canvas`, `sharp`, `sqlite3`, `puppeteer`
+- ✅ **USE INSTEAD**: `bcryptjs`, `sass`, Cloudinary APIs, `pg`
 
 ### 2. Database Support
-Because GitNexus runs in the browser, you do not have persistent local database demons running alongside your code.
-*   ❌ **Local Databases via Drivers**: `sqlite3` natively requires C++ and will not work.
-*   ✅ **Cloud Databases**: Connecting remotely to MongoDB Atlas, Supabase, Neon (PostgreSQL), or Firebase works flawlessly using standard `fetch` or pure-JS drivers.
-*   ✅ **In-Memory**: Standard Node.js arrays/objects are fine for mock deployments.
+- ❌ Local daemons (`sqlite3` requires C++)
+- ✅ Cloud databases: MongoDB Atlas, Supabase, Neon, Firebase
 
-### 3. Frontend Frameworks (React, Next.js, Vue, Svelte)
-WebContainers *can* run `vite dev` or `next dev`, but Next.js **Turbopack** relies on Rust/WASM bindings that are fundamentally unsupported in browser containers, causing random crashes. Furthermore, heavy Next.js SSR processes consume massive browser memory.
+### 3. Frontend Frameworks
+Next.js Turbopack uses Rust/WASM bindings that are unsupported in browser containers.
 
-**The GitNexus Standard:**
-The absolute best way to deploy heavy frontend applications to GitNexus is **Static Architecture Separation**:
-1. Configure your frontend (Next.js/React) to output static HTML/CSS/JS (`output: 'export'` for Next.js, yielding an `out/` directory).
-2. Write a lightweight custom `server.js` (Express) that serves that static `out/` directory and mounts your `/api` routes.
-3. Use the Bundler (`-s out`) to compress the frontend directly into the server `.cjs` bundle.
+**Best practice:** Use static export (`output: 'export'`) + Express backend + `-s out` flag.
 
-When GitNexus boots the bundle, the `.cjs` executable automatically "unpacks" the UI directory to the browser's virtual hard drive in 2 milliseconds, and the Express server serves it instantly.
-
-### 4. ESM Strict Mode Constraints
-Many modern frameworks enforce `"type": "module"` in their `package.json`. GitNexus Cloud remote bundles are strictly engineered to download and execute as `.cjs` files. This is intentional. Native CommonJS execution (`require`) bypasses the strict OS-level loader errors that WebContainers throw when mixing ESModules with dynamically downloaded remote payload bundles.
-*   The Universal Bundler handles this automatically. Always rely on the `.cjs` GitNexus Bundle.
+### 4. ESM Constraints
+GitNexus bundles must be `.cjs`. The bundler handles this automatically.
 
 ### 5. Server Port Binding
-Ensure your server binds to `0.0.0.0`. WebContainer Network Proxies frequently drop connections that are arbitrarily bound to `localhost` or IPv6 loopbacks (`::1`).
+Bind to `0.0.0.0` — WebContainer network proxies drop `localhost`/IPv6 connections.
 
 ```javascript
-// ✅ CORRECT:
 app.listen(8080, '0.0.0.0', () => console.log('Ready'));
 ```
 
-### 6. Iframe Security Policies (Helmet / Content Security Policy)
-GitNexus renders your application OS natively inside an Iframe on the dashboard preview. If your Node.js backend uses aggressive security policies (like `helmet`), it will block GitNexus from rendering the page with a "Refused to Connect" error.
+### 6. Iframe Security (Helmet / CSP)
+GitNexus renders apps inside an iframe. Disable aggressive CSP headers:
 
-Ensure your server is configured to permit WebContainer iframe embedding:
 ```javascript
-import helmet from 'helmet';
-
 app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: false,
     crossOriginOpenerPolicy: false,
-    frameguard: false // CRITICAL: Allows GitNexus iframe display
+    frameguard: false
 }));
 ```
 
-### 7. Native TypeScript Support (Zero-Config)
-The Universal Bundler is powered by `esbuild` under the hood. It natively understands and compiles both JavaScript (`.js`, `.cjs`, `.mjs`) and TypeScript (`.ts`, `.tsx`) completely out of the box.
-
-There is **zero configuration required**. You do not need a `tsconfig.json` or the `tsc` compiler.
+### 7. Native TypeScript Support
+Powered by `esbuild` — zero configuration needed, TypeScript just works.
 
 ```bash
-# Point the bundler directly at a TypeScript file:
 nexus-bundle build -i src/server.ts
 ```
-
-The bundler will automatically:
-1. Strip all TypeScript types instantly.
-2. Transpile the modern code into GitNexus-required CommonJS.
-3. Package it into the final `gitnexus-bundle.cjs` executable.

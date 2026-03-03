@@ -6,7 +6,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { execSync } from 'child_process';
 import { runBundler } from '../lib/bundler.js';
-import { generateGitNexusManifest, injectGitHubAction } from '../lib/generators.js';
+import { generateGitNexusManifest } from '../lib/generators.js';
 
 program
     .name('nexus-bundle')
@@ -28,7 +28,7 @@ program
             const outputPath = path.resolve(process.cwd(), options.output);
 
             if (options.frontend) {
-                console.log(chalk.yellow(`🛠️ Executing frontend build command: ${options.frontend}`));
+                console.log(chalk.yellow(`🛠️  Executing frontend build command: ${options.frontend}`));
                 try {
                     execSync(options.frontend, { stdio: 'inherit', cwd: process.cwd() });
                     console.log(chalk.green('✅ Frontend build complete.'));
@@ -49,11 +49,8 @@ program
             console.log(chalk.yellow('📄 Generating gitnexus.json manifest...'));
             await generateGitNexusManifest(process.cwd(), options.output);
 
-            console.log(chalk.yellow('⚙️ Injecting GitHub Actions Release Workflow...'));
-            await injectGitHubAction(process.cwd(), options.input, options.frontend, options.static);
-
             console.log(chalk.green('\n✅ Success! Your repository is now fully GitNexus compatible.'));
-            console.log(chalk.gray('Push your code to the main branch to trigger the automatic GitHub release.'));
+            console.log(chalk.gray('Upload your gitnexus-bundle.cjs to any public file host and update bundleUrl in gitnexus.json.'));
 
         } catch (error) {
             console.error(chalk.red('\n❌ Bundling failed:'), error);
