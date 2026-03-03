@@ -1,11 +1,11 @@
 {
   "name": "gitnexus-bundler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Universal GitNexus Cloud Bundler CLI — compile any Node.js/Next.js app into a single .cjs executable for GitNexus WebContainer deployments",
   "main": "bin/index.js",
   "type": "module",
   "bin": {
-    "gitnexus-bundle": "./bin/index.js"
+    "gitnexus-bundle": "bin/index.js"
   },
   "scripts": {
     "test": "echo \"No tests yet\" && exit 0"
