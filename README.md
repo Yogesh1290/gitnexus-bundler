@@ -1,5 +1,9 @@
 # GitNexus Universal Bundler (nexus-bundle)
 
+![NPM Version](https://img.shields.io/npm/v/nexus-bundler) ![License](https://img.shields.io/npm/l/nexus-bundler)
+
+*Tags: `#gitnexus` `#webcontainer` `#serverless` `#nextjs` `#react` `#nodejs` `#bundler`*
+
 The overarching Command Line Interface (CLI) to compile **any Node.js full-stack repository** into a high-performance, autonomous **GitNexus Cloud Executable**.
 
 GitNexus Universal Bundler enables you to take massive, multi-framework applications (like Next.js + Express) and compress them into a solitary `.cjs` executable payload that boots instantaneously inside the **GitNexus Browser WebContainer OS**.

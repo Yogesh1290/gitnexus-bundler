@@ -10,7 +10,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "gitnexus",
+    "cloud",
+    "bundler",
+    "webcontainer",
+    "nextjs",
+    "react",
+    "serverless",
+    "express",
+    "cli"
+  ],
   "author": "GitNexus",
   "license": "MIT",
   "dependencies": {
