@@ -10,7 +10,7 @@ This tool runs **locally on your machine** and produces two output files:
 - `gitnexus-bundle.cjs` — your self-contained app executable
 - `gitnexus.json` — a manifest pointing to where you host your bundle
 
-> 📚 **[Architecture Guide](docs/nexus-guide.md)** · **[Project Overview & Context](docs/OVERVIEW.md)** · **[Security Policy](docs/SECURITY.md)**
+> 📚 **[Architecture Guide](docs/nexus-guide.md)** · **[Setup Guide](docs/SETUP_GUIDE.md)** · **[Project Overview & Context](docs/OVERVIEW.md)** · **[Security Policy](docs/SECURITY.md)**
 
 ---
 
