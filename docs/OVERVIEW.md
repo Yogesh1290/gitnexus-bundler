@@ -1,32 +1,82 @@
 # gitnexus-bundler — What It Is and What It Proposes
 
-## What GitNexus Actually Is
+## What GitNexus Actually Is — Two Distinct Products
 
-[GitNexus](https://github.com/abhigyanpatwari/GitNexus) is a code intelligence engine. It indexes any codebase into a knowledge graph — every dependency, call chain, cluster, and execution flow — and exposes that graph through MCP (Model Context Protocol) tools so AI coding agents like Cursor and Claude Code have real architectural awareness of a codebase.
+[GitNexus](https://github.com/abhigyanpatwari/GitNexus) describes itself as *"the nervous system for agent context."* It is built around two separate products that share the same indexing engine:
 
-Its web UI (`gitnexus.vercel.app`) is a client-side graph explorer. You drop in a repo or ZIP file and get an interactive visualization with AI chat. No server. Uses Tree-sitter WASM, KuzuDB WASM, and in-browser embeddings.
+**Product 1 — CLI + MCP (primary, recommended):**
+The CLI indexes a repo into a KuzuDB knowledge graph, then runs an MCP server that AI agents connect to. Agents get 7 tools: `query`, `context`, `impact`, `detect_changes`, `rename`, `cypher`, `list_repos`. Claude Code, Cursor, and Pi use these tools to never miss a dependency or break a call chain. This is the main product.
 
-**This bundler does not change any of that.** It does not modify GitNexus's core code intelligence functionality.
+**Product 2 — Web UI (secondary, "quick exploration"):**
+A fully client-side graph explorer at `gitnexus.vercel.app`. Drop in a ZIP or GitHub repo, get an interactive knowledge graph with AI chat. Runs entirely in the browser via Tree-sitter WASM + KuzuDB WASM. Their README explicitly calls it "great for quick exploration."
 
----
-
-## What This Bundler Proposes to Add
-
-GitNexus's web UI currently lets users *explore* and *analyze* a codebase. The bundler proposes extending this with a second capability: *running* a codebase as a live interactive app directly in the browser.
-
-The proposed addition is a marketplace layer inside the GitNexus web UI where open-source Node.js tools and web apps can be launched by any user without installing anything or paying for server hosting.
-
-The workflow being proposed:
-
-1. A developer bundles their Node.js app locally using the `gitnexus-bundler` CLI. This produces a single `.cjs` file using esbuild — the server, all dependencies, and the frontend are compiled into one executable.
-2. They host that file on a public URL (Cloudflare Pages, CDN, etc.) and add a `gitnexus.json` manifest to their repo pointing to it.
-3. A user visiting the GitNexus marketplace clicks "Launch." The `.cjs` file is downloaded and executed inside the user's browser via WebContainers (StackBlitz's `@webcontainer/api`). A Node.js process starts inside the browser. The app runs.
-
-**This integration is not yet merged into the main GitNexus repo.** This bundler and the associated marketplace UI are being developed as a proposed contribution.
+**This bundler does not change either product's core functionality.**
 
 ---
 
-## The Problem It Addresses
+## Two Use Cases — Both Honest, Different Audiences
+
+---
+
+### Use Case 1 — Primary Pitch: `run_app` MCP Tool (targets CLI + MCP)
+
+> *"GitNexus gives AI agents perfect static understanding. This adds the execution half."*
+
+The CLI + MCP server currently exposes 7 read-only tools. Agents can analyze architecture, trace call chains, assess blast radius — but they cannot run the code they're analyzing.
+
+**The proposed 8th MCP tool: `run_app`**
+
+When a repo has a `gitnexus.json` manifest (indicating it can be bundled), an AI agent can call:
+
+```
+run_app({ repo: "my-app" })
+```
+
+This triggers the following locally on the developer's machine:
+1. `gitnexus-bundler` compiles the repo into a single `.cjs` via esbuild
+2. The web UI (running locally via `gitnexus serve`) detects the bundle is ready
+3. WebContainer boots the app in a browser tab in under 1 second
+4. The developer sees live output, logs, and UI
+
+**Why this is technically valid (no hype):**
+- Everything runs locally — no WebContainer sandbox limitations apply (no public IP needed)
+- The MCP server is already local; triggering a local CLI from a local server is straightforward
+- The loop closes: `query → analyze → impact → run → observe → next edit`
+
+**What the agent can now say:**
+> "I analyzed the impact of your change — 7 call chains are affected. I've bundled the app. Want me to boot it in your browser so you can verify the fix before committing?"
+
+**This is real, technically achievable, and directly extends GitNexus's own stated goal:**
+*"So AI agents never miss code"* → extended to *"so AI agents never guess behavior."*
+
+---
+
+### Use Case 2 — Secondary: Standalone Marketplace (targets Web UI + zero-install distribution)
+
+> *"Any Node.js tool can be listed and launched with zero install — no connection to the CLI or MCP required."*
+
+This is a completely independent use case that does not depend on GitNexus's MCP or CLI at all. It solves a different problem: open-source Node.js tools have no zero-cost, zero-install way to distribute live demos.
+
+**The workflow:**
+1. Developer bundles their Node.js app: `npx gitnexus-bundler build -i server.js -s out`
+2. Hosts the `.cjs` on Cloudflare Pages (free)
+3. Lists it on the [GitNexus Marketplace](https://github.com/GitNexus-Marketplace/gitnexus-marketplace) via a `registry.json` PR
+4. Anyone clicks Launch → app boots in their browser tab in under 1 second
+
+**Who this is for:** Open-source tool authors who want users to try their tool without clone/install friction. End users on corporate laptops, Chromebooks, or school machines where `npm install` is blocked.
+
+**This is already built and operational** as a standalone community project:
+- [`gitnexus-bundler`](https://npmjs.com/package/gitnexus-bundler) — npm package, published
+- [GitNexus-Marketplace/gitnexus-marketplace](https://github.com/GitNexus-Marketplace/gitnexus-marketplace) — live marketplace frontend (Vercel)
+- Five category registries with PR-based submission flow
+
+**Relationship to GitNexus main repo:** Uses the same WebContainer technology and follows the same zero-server spirit, but operates independently. No PR to the main repo is required for this use case to function.
+
+---
+
+## The Problem Both Use Cases Address
+
+
 
 Most open-source Node.js tools exist only as raw files on GitHub. Using them requires cloning the repo, installing dependencies, and running a server locally. Most users don't do this. Hosting a persistent live demo costs money — for a free open-source project, that's a blocker.
 
